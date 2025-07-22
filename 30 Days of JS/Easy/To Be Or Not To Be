@@ -1,0 +1,35 @@
+/**
+ * @param {any} val
+ * @return {object}
+ */
+var expect = function(val) {
+    return {
+        toBe: function(expected) {
+            if (val === expected) return true;
+            throw new Error("Not Equal");
+        },
+        notToBe: function(expected) {
+            if (val !== expected) return true;
+            throw new Error("Equal");
+        }
+    };
+};
+
+// Example Usage
+try {
+    console.log(expect(5).toBe(5));         // Output: true
+} catch (err) {
+    console.log({ error: err.message });    // Only logs if error occurs
+}
+
+try {
+    console.log(expect(5).toBe(null));      // Throws: "Not Equal"
+} catch (err) {
+    console.log({ error: err.message });
+}
+
+try {
+    console.log(expect(5).notToBe(null));   // Output: true
+} catch (err) {
+    console.log({ error: err.message });
+}
