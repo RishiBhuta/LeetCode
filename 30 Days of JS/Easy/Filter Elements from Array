@@ -1,0 +1,24 @@
+/**
+ * @param {number[]} arr
+ * @param {(number, number) => any} fn
+ * @return {number[]}
+ */
+var filter = function(arr, fn) {
+    const result = [];
+    for (let i = 0; i < arr.length; i++) {
+        if (fn(arr[i], i)) {
+            result.push(arr[i]);
+        }
+    }
+    return result;
+};
+
+// Example Usage:
+const greaterThan10 = n => n > 10;
+console.log(filter([0, 10, 20, 30], greaterThan10)); // Output: [20, 30]
+
+const firstIndex = (n, i) => i === 0;
+console.log(filter([1, 2, 3], firstIndex)); // Output: [1]
+
+const plusOne = n => n + 1;
+console.log(filter([-2, -1, 0, 1, 2], plusOne)); // Output: [-2, 0, 1, 2]
