@@ -1,0 +1,54 @@
+class TimeLimitedCache {
+    constructor() {
+        this.cache = new Map(); // key -> { value, expirationTime }
+    }
+
+    /**
+     * @param {number} key
+     * @param {number} value
+     * @param {number} duration in ms
+     * @return {boolean} true if unexpired key existed, false otherwise
+     */
+    set(key, value, duration) {
+        const now = Date.now();
+        const isActive = this.cache.has(key) && this.cache.get(key).expiration > now;
+
+        this.cache.set(key, {
+            value,
+            expiration: now + duration
+        });
+
+        return isActive;
+    }
+
+    /**
+     * @param {number} key
+     * @return {number} value if unexpired, otherwise -1
+     */
+    get(key) {
+        const now = Date.now();
+        const entry = this.cache.get(key);
+
+        if (entry && entry.expiration > now) {
+            return entry.value;
+        }
+
+        return -1;
+    }
+
+    /**
+     * @return {number} count of non-expired keys
+     */
+    count() {
+        const now = Date.now();
+        let activeCount = 0;
+
+        for (const { expiration } of this.cache.values()) {
+            if (expiration > now) {
+                activeCount++;
+            }
+        }
+
+        return activeCount;
+    }
+}
