@@ -1,0 +1,33 @@
+class EventEmitter {
+    constructor() {
+        this.events = new Map(); // Map of event name to array of callback wrappers
+    }
+
+    subscribe(eventName, callback) {
+        if (!this.events.has(eventName)) {
+            this.events.set(eventName, []);
+        }
+
+        const listeners = this.events.get(eventName);
+        const listener = { callback };
+
+        listeners.push(listener);
+
+        return {
+            unsubscribe: () => {
+                const index = listeners.indexOf(listener);
+                if (index !== -1) {
+                    listeners.splice(index, 1);
+                }
+            }
+        };
+    }
+
+    emit(eventName, args = []) {
+        if (!this.events.has(eventName)) {
+            return [];
+        }
+
+        return this.events.get(eventName).map(listener => listener.callback(...args));
+    }
+}
