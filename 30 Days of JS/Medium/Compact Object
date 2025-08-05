@@ -1,0 +1,20 @@
+var compactObject = function(obj) {
+    if (Array.isArray(obj)) {
+        return obj
+            .map(compactObject)               // recursively clean each item
+            .filter(item => Boolean(item));   // remove falsy items
+    }
+
+    if (obj !== null && typeof obj === "object") {
+        const result = {};
+        for (const [key, value] of Object.entries(obj)) {
+            const compacted = compactObject(value);
+            if (Boolean(compacted)) {
+                result[key] = compacted;
+            }
+        }
+        return result;
+    }
+
+    return obj; // base case: primitive value (string, number, etc.)
+};
