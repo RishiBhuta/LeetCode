@@ -1,0 +1,26 @@
+class Solution {
+public:
+    double soupServings(int n) {
+        if (n > 4800) return 1.0;  // optimization threshold
+
+        int m = (n + 24) / 25; // scale down to units of 25 mL
+        vector<vector<double>> dp(m + 1, vector<double>(m + 1, -1.0));
+
+        function<double(int,int)> serve = [&](int a, int b) -> double {
+            if (a <= 0 && b <= 0) return 0.5;
+            if (a <= 0) return 1.0;
+            if (b <= 0) return 0.0;
+            if (dp[a][b] >= 0) return dp[a][b];
+
+            dp[a][b] = 0.25 * (
+                serve(a - 4, b) +
+                serve(a - 3, b - 1) +
+                serve(a - 2, b - 2) +
+                serve(a - 1, b - 3)
+            );
+            return dp[a][b];
+        };
+
+        return serve(m, m);
+    }
+};
